@@ -34,9 +34,12 @@ export class StockMarketEffects {
   retrieveStock(): Observable<Action> {
     return this.actions$.ofType(StockMarketActionTypes.RETRIEVE).pipe(
       tap((action: ActionStockMarketRetrieve) =>
-        this.localStorageService.setItem(STOCK_MARKET_KEY, {
-          symbol: action.payload.symbol
-        })
+        {
+          console.log(action);
+          this.localStorageService.setItem(STOCK_MARKET_KEY, {
+            symbol: action.payload.symbol
+          })
+        }
       ),
       distinctUntilChanged(),
       debounceTime(500),

@@ -18,9 +18,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { BigInputComponent } from './big-input/big-input.component';
 import { BigInputActionComponent } from './big-input/big-input-action.component';
+import { NgxEchartsModule } from 'ngx-echarts';
+
+import { FileDropModule } from 'ngx-file-drop';
 
 @NgModule({
   imports: [
@@ -42,7 +46,10 @@ import { BigInputActionComponent } from './big-input/big-input-action.component'
     MatIconModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatExpansionModule,
+    NgxEchartsModule，
+    FileDropModule
   ],
   declarations: [BigInputComponent, BigInputActionComponent],
   exports: [
@@ -65,6 +72,9 @@ import { BigInputActionComponent } from './big-input/big-input-action.component'
     MatTooltipModule,
     MatSnackBarModule,
     MatSlideToggleModule,
+    MatExpansionModule,
+    NgxEchartsModule,
+    FileDropModule,
 
     BigInputComponent,
     BigInputActionComponent

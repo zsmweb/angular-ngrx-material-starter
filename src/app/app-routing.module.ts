@@ -13,7 +13,7 @@ const routes: Routes = [
     path: 'settings',
     component: SettingsComponent,
     data: {
-      title: 'Settings'
+      title: '设置'
     }
   },
   {

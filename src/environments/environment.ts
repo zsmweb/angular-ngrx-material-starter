@@ -6,7 +6,7 @@
 const packageJson = require('../../package.json');
 
 export const environment = {
-  appName: 'Angular Ngrx Material Starter',
+  appName: '游戏监控',
   envName: 'DEV',
   production: false,
   test: false,

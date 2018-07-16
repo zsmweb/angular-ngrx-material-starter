@@ -40,13 +40,13 @@ export class AppComponent implements OnInit, OnDestroy {
   year = new Date().getFullYear();
   logo = require('../assets/logo.png');
   navigation = [
-    { link: 'about', label: 'About' },
-    { link: 'features', label: 'Features' },
-    { link: 'examples', label: 'Examples' }
+    { link: 'about', label: '使用说明' },
+    { link: 'features', label: '历史对比' },
+    { link: 'examples', label: '实时监控' }
   ];
   navigationSideMenu = [
     ...this.navigation,
-    { link: 'settings', label: 'Settings' }
+    { link: 'settings', label: '设置' }
   ];
   isAuthenticated;
 
