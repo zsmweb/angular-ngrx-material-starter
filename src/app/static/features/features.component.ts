@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { environment as env } from '@env/environment';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core';
+import { NgxEchartsService } from 'ngx-echarts';
 
 @Component({
   selector: 'anms-features',
@@ -11,6 +12,8 @@ import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core';
 export class FeaturesComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   versions = env.versions;
+
+  constructor(private nes: NgxEchartsService){}
 
   @ViewChild("container") container:ElementRef;
 
@@ -97,5 +100,13 @@ export class FeaturesComponent implements OnInit {
         data:[820, 932, 901, 934, 1290, 1330, 1320]
       }
     ]
+  }
+
+  charts:any[] = [];
+  onChartInit(chart){
+    this.charts.push(chart);
+    if(this.charts.length == 4){
+      this.nes.connect(this.charts);
     }
+  }
 }

@@ -48,7 +48,7 @@ import { FileDropModule } from 'ngx-file-drop';
     MatSnackBarModule,
     MatSlideToggleModule,
     MatExpansionModule,
-    NgxEchartsModule，
+    NgxEchartsModule,
     FileDropModule
   ],
   declarations: [BigInputComponent, BigInputActionComponent],

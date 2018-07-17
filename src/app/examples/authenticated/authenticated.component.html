@@ -1,14 +1,72 @@
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="main-heading">Authenticated component</h1>
-      <p>
-        This component is only accessible for authenticated users
-      </p>
-      <p>
-        Logging out will cause user to be redirected to home screen if visiting route
-        accessible only to authenticated users
-      </p>
+<div #container class="container1">
+  <div class="row align-items-end">
+    <div class="col-md-12 col-lg-12" [ngClass]="routeAnimationsElements">
+      <mat-card>
+        <mat-card-title>实时游戏监控</mat-card-title>
+        <mat-card-content>
+          <mat-accordion class="headers-align" multi="true">
+            <mat-expansion-panel expanded="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  FPS
+                </mat-panel-title>
+                <mat-panel-description>
+                  游戏帧率显示
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+          
+              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+            </mat-expansion-panel>
+            <mat-expansion-panel expanded="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  CPUFREQ
+                </mat-panel-title>
+                <mat-panel-description>
+                  cpu频率显示
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+          
+              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+            </mat-expansion-panel>
+          
+            <mat-expansion-panel expanded="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  GPUFREQ
+                </mat-panel-title>
+                <mat-panel-description>
+                  gpu频率显示
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+          
+              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+            </mat-expansion-panel>
+          
+            <mat-expansion-panel expanded="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  TEMP
+                </mat-panel-title>
+                <mat-panel-description>
+                  cpu和主板温度显示
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+            </mat-expansion-panel>
+
+          </mat-accordion>
+        </mat-card-content>
+        <mat-card-actions>
+          <a mat-icon-button href="https://github.com/angular/angular" target="_blank">
+            <mat-icon fontSet="fab" fontIcon="fa-github"></mat-icon>
+          </a>
+          <a mat-button href="https://angular.io/docs/ts/latest/" target="_blank">
+            <mat-icon fontSet="fas" fontIcon="fa-book"></mat-icon>
+            Docs
+          </a>
+        </mat-card-actions>
+      </mat-card>
     </div>
   </div>
 </div>
