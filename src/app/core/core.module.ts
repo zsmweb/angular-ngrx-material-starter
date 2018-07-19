@@ -14,6 +14,7 @@ import { authReducer } from './auth/auth.reducer';
 import { AuthEffects } from './auth/auth.effects';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { AnimationsService } from './animations/animations.service';
+import { SocketService } from "./socketio/socket.service";
 
 export const metaReducers: MetaReducer<any>[] = [initStateFromLocalStorage];
 
@@ -40,7 +41,7 @@ if (!environment.production) {
     EffectsModule.forRoot([AuthEffects])
   ],
   declarations: [],
-  providers: [LocalStorageService, AuthGuardService, AnimationsService]
+  providers: [LocalStorageService, AuthGuardService, AnimationsService, SocketService]
 })
 export class CoreModule {
   constructor(

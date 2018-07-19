@@ -5,7 +5,7 @@ import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { ActivationEnd, Router, NavigationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, map } from 'rxjs/operators';
 
 import {
   ActionAuthLogin,
@@ -22,6 +22,8 @@ import {
   SettingsState,
   ActionSettingsChangeAnimationsPageDisabled
 } from './settings';
+import { SocketService } from './core/socketio/socket.service';
+import { connect } from 'tls';
 
 @Component({
   selector: 'anms-root',
@@ -55,7 +57,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     private router: Router,
     private titleService: Title,
-    private animationService: AnimationsService
+    private animationService: AnimationsService,
+    private socket :SocketService
   ) {}
 
   private static trackPageView(event: NavigationEnd) {
@@ -91,6 +94,16 @@ export class AppComponent implements OnInit, OnDestroy {
       .select(selectorAuth)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(auth => (this.isAuthenticated = auth.isAuthenticated));
+
+    this.socket.connected$.pipe(
+      map(connect=>{
+        if(connect){
+          return new ActionAuthLogin();
+        }else{
+          return new ActionAuthLogout();
+        }
+      })
+    ).subscribe(this.store);
   }
 
   private subscribeToSettings() {

@@ -21,5 +21,9 @@ export const environment = {
       packageJson.dependencies['@fortawesome/fontawesome-free-webfonts'],
     angularCli: packageJson.devDependencies['@angular/cli'],
     typescript: packageJson.devDependencies['typescript']
+  },
+  socket: {
+    baseUrl: location.protocol + '//' + location.hostname + ':3000',
+    config: {}
   }
 };
