@@ -37,10 +37,15 @@ export class ExamplesComponent implements OnInit {
         }
       }
     });
+
     this.examples = this.store.select(fromNotesStore.getDevices).pipe(
       map(d=>{
         return d.map(dd=>{return { link: 'authenticated/'+dd, label: dd }})
       })
     );
+  }
+  onClick(sn){
+    console.log(sn);
+    this.store.dispatch(new notesActions.JoinRoom(sn));
   }
 }

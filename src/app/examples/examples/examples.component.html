@@ -2,6 +2,7 @@
   <a mat-tab-link
      *ngFor="let e of examples|async"
      [routerLink]="e.link"
+     (click)="onClick(e.label)"
      routerLinkActive #rla="routerLinkActive"
      [active]="rla.isActive">
     {{e.label}}

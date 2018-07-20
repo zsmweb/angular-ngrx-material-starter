@@ -3,10 +3,10 @@ import { NgxEchartsService } from 'ngx-echarts';
 import { ditem, Note } from '../../core/models/note';
 import { Observable } from 'rxjs';
 import {Store} from '@ngrx/store';
-import * as fromNotesStore from '../authenticated/store';
-import * as notesActions from '../authenticated/store/actions/notes.actions';
+import * as fromNotesStore from './store';
+import * as notesActions from './store/actions/notes.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take, map } from '../../../../node_modules/rxjs/operators';
+import { take, map } from 'rxjs/operators';
 
 @Component({
   selector: 'anms-authenticated',
@@ -41,6 +41,8 @@ export class AuthenticatedComponent implements OnInit {
     this.store.select(fromNotesStore.getEntitiesArray).subscribe(notes=>{
       this.allNotes = notes;
     });
+    this.store.select(fromNotesStore.getTimes).subscribe();
+    
   }
 
   chartOption = {
