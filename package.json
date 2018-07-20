@@ -49,6 +49,7 @@
     "ngx-file-drop": "^4.0.6",
     "rxjs": "^6.2.1",
     "socket.io-client": "^2.1.1",
+    "uix-mat-number-spinner": "^0.0.7",
     "uuid": "^3.1.0",
     "web-animations-js": "^2.2.5",
     "zone.js": "^0.8.26"

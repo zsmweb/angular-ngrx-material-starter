@@ -1,14 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxEchartsService } from 'ngx-echarts';
+import { ditem, Note } from '../../core/models/note';
+import { Observable } from 'rxjs';
+import {Store} from '@ngrx/store';
+import * as fromNotesStore from '../authenticated/store';
+import * as notesActions from '../authenticated/store/actions/notes.actions';
+import { ActivatedRoute, Router } from '@angular/router';
+import { take, map } from '../../../../node_modules/rxjs/operators';
+
 @Component({
   selector: 'anms-authenticated',
   templateUrl: './authenticated.component.html',
   styleUrls: ['./authenticated.component.scss']
 })
 export class AuthenticatedComponent implements OnInit {
-  constructor(private nes: NgxEchartsService) {}
-
-  ngOnInit() {}
+  constructor(private router: Router,private nes: NgxEchartsService,private store: Store<fromNotesStore.State>,
+  private routeInfo:ActivatedRoute) {}
+  cpusrs$: Observable<ditem[]>;
+  gpusrs$: Observable<ditem[]>;
+  
+  allNotes:Note[];
+  ngOnInit() {
+    let sn = this.routeInfo.snapshot.params['sn'];
+    if(sn){
+      this.routeInfo.snapshot.data['title'] = sn;
+    }else{
+      this.store.select(fromNotesStore.getCurDevices).pipe(
+        take(1),
+        map(tmp=>{
+          if(tmp){
+            this.store.dispatch(new notesActions.JoinRoom(tmp));
+            this.router.navigate(['/examples/authenticated/'+tmp]);
+            console.log('going3'+tmp)
+          }
+        })
+      ).subscribe();
+    }
+    this.cpusrs$ = this.store.select(fromNotesStore.getCpuEntitesArray);
+    this.gpusrs$ = this.store.select(fromNotesStore.getGpuEntitesArray);
+    this.store.select(fromNotesStore.getEntitiesArray).subscribe(notes=>{
+      this.allNotes = notes;
+    });
+  }
 
   chartOption = {
     title: {
@@ -94,4 +127,21 @@ export class AuthenticatedComponent implements OnInit {
       this.nes.connect(this.charts);
     }
   }
+
+  onValueChange(element,event){
+    let updatenote = this.allNotes.find((note)=>{
+      if(note.body[0] == element.id)
+        return true;
+    })
+    updatenote = Object.assign({},updatenote);
+    updatenote.body = Object.values(element);
+    this.store.dispatch(new notesActions.UpdateNote(updatenote));
+  }
+
+  UpdateValue(element:ditem,value:number,key:string){
+    element[key] = value;
+    return Object.assign({},element);
+  }
+
+  displayedColumns: string[] = ['id', 'min', 'max', 'timeout'];
 }

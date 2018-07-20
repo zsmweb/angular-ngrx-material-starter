@@ -39,13 +39,13 @@ export class SocketService {
   }
 
   emit(event: string, data?: any) {
-
+    if('debug' in window){
     console.group();
       console.log('----- SOCKET OUTGOING -----');
       console.log('Action: ', event);
       console.log('Payload: ', data);
     console.groupEnd();
-
+    }
     this.socket.emit(event, data);
   }
 
@@ -54,13 +54,13 @@ export class SocketService {
     return new Observable( observer => {
 
       this.socket.on(event, data => {
-
+        if('debug' in window){
         console.group();
           console.log('----- SOCKET INBOUND -----');
           console.log('Action: ', event);
           console.log('Payload: ', data);
         console.groupEnd();
-
+        }
         observer.next(data);
       });
       // dispose of the event listener when unsubscribed

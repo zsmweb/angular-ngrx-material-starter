@@ -45,7 +45,15 @@ const routes: Routes = [
         component: AuthenticatedComponent,
         canActivate: [AuthGuardService],
         data: {
-          title: 'Authenticated'
+          title: '手机sn'
+        }
+      },
+      {
+        path: 'authenticated/:sn',
+        component: AuthenticatedComponent,
+        canActivate: [AuthGuardService],
+        data: {
+          title: '手机sn'
         }
       }
     ]

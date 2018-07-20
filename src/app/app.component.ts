@@ -155,7 +155,9 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe(event => {
         if (event instanceof ActivationEnd) {
-          this.setPageTitle(event);
+          setTimeout(()=>{
+            this.setPageTitle(event);
+          },100);
         }
 
         if (event instanceof NavigationEnd) {

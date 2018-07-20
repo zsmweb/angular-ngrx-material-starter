@@ -19,12 +19,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
 
 import { BigInputComponent } from './big-input/big-input.component';
 import { BigInputActionComponent } from './big-input/big-input-action.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 
 import { FileDropModule } from 'ngx-file-drop';
+import { MatNumberSpinnerComponent } from './spinner/mat-number-spinner.component';
 
 @NgModule({
   imports: [
@@ -49,9 +51,10 @@ import { FileDropModule } from 'ngx-file-drop';
     MatSlideToggleModule,
     MatExpansionModule,
     NgxEchartsModule,
-    FileDropModule
+    FileDropModule,
+    MatTableModule
   ],
-  declarations: [BigInputComponent, BigInputActionComponent],
+  declarations: [BigInputComponent, BigInputActionComponent,MatNumberSpinnerComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -75,9 +78,11 @@ import { FileDropModule } from 'ngx-file-drop';
     MatExpansionModule,
     NgxEchartsModule,
     FileDropModule,
+    MatTableModule,
 
     BigInputComponent,
-    BigInputActionComponent
+    BigInputActionComponent,
+    MatNumberSpinnerComponent
   ]
 })
 export class SharedModule {}
