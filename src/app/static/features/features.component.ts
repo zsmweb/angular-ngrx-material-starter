@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 
 import { environment as env } from '@env/environment';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core';
 import { NgxEchartsService } from 'ngx-echarts';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'anms-features',
@@ -13,11 +14,419 @@ export class FeaturesComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   versions = env.versions;
 
-  constructor(private nes: NgxEchartsService){}
+  constructor(private cdr: ChangeDetectorRef,private nes: NgxEchartsService){}
 
   @ViewChild("container") container:ElementRef;
 
+  jsonSubj = new Subject<any>();
+  jsonObserable = this.jsonSubj.asObservable();
+
+  fpsOptions: any;
+  fpsUpdateOptions: any;
+  // private fpsData: any[];
+  private fpsDataArray: any[] = [];
+  fpsSubj = new Subject<any>();
+
+  cpusOptions: any;
+  cpusUpdateOptions: any;
+  // private cpusData: any[][];
+  private cpusDataArray: any[] = [];
+  cpusSubj = new Subject<any>();
+
+  tempOptions: any;
+  tempUpdateOptions: any;
+  // private tempData: any[][];
+  private tempDataArray: any[] = [];
+  tempSubj = new Subject<any>();
+
+  gpuOptions: any;
+  gpuUpdateOptions: any;
+  // private gpuData: any[];
+  private gpuDataArray: any[] = [];
+  gpuSubj = new Subject<any>();
+
   ngOnInit() {
+    // initialize chart options:
+    this.fpsOptions = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      xAxis: {
+        type: 'value',
+        splitLine: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%']
+      },
+      dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 0,
+            end: 100
+        },
+        {
+            type: 'inside',
+            realtime: true,
+            start: 0,
+            end: 100
+        }
+    ],
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '10%',
+      containLabel: true
+    },
+      series: [{
+        name: 'Fps',
+        type: 'line',
+        showSymbol: false,
+        connectNulls:false,
+        hoverAnimation: false,
+        data: []
+      }]
+    };
+
+    this.fpsSubj.asObservable().subscribe((x)=>{
+      if(x)
+        this.fpsDataArray.push(x);
+      let idx = 0;
+      var legend = [];
+      let data = this.fpsDataArray.map(d=>{
+        idx++;
+        legend.push(idx+'_Fps');
+        return {
+          name: idx+'_Fps',
+          type: 'line',
+          showSymbol: false,
+          connectNulls:false,
+          hoverAnimation: false,
+          data: d
+        }
+      });
+      this.fpsUpdateOptions = {
+        legend: {
+          data: legend,
+          align: 'left'
+        },
+        series: [...data]
+      };
+      this.cdr.detectChanges();
+    });
+
+    // this.cpusData = [];
+    // this.cpusData[0] = [];
+    // this.cpusData[1] = [];
+    // this.cpusData[2] = [];
+    this.cpusOptions = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      xAxis: {
+        type: 'value',
+        splitLine: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%']
+      },
+      dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 0,
+            end: 100
+        },
+        {
+            type: 'inside',
+            realtime: true,
+            start: 0,
+            end: 100
+        }
+    ],
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '10%',
+      containLabel: true
+    },
+      series: [{
+        name: 'cluster0',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: []
+      },{
+        name: 'cluster1',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: []
+      },{
+        name: 'cluster2',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: []
+      }]
+    };
+    this.cpusSubj.asObservable().subscribe((obj)=>{
+      let {x,y,z} = obj;
+      if(obj)
+        this.cpusDataArray.push({x,y,z});
+      let idx = 0;
+      let legendall = [];
+      let data = [];
+      this.cpusDataArray.map(({x,y,z})=>{
+        idx++;
+        var legend =  [idx+'_cluster0', idx+'_cluster1'];
+        if(z.length>0){
+          legend.push(idx+'_cluster2')
+        }
+        legendall = legendall.concat(legend);
+        data.push({
+          name: idx+'_cluster0',
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
+          data: x
+        });
+        data.push({
+          name: idx+'_cluster1',
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
+          data: y
+        });
+        if(z.length>0){
+          data.push({
+            name: idx+'_cluster2',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: z
+          });
+        }
+      });
+      this.cpusUpdateOptions = {
+        legend: {
+          data: legendall,
+          align: 'left'
+        },
+        series: [...data]
+      };
+      this.cdr.detectChanges();
+    });
+
+    // this.tempData = [];
+    // this.tempData[0] = [];
+    // this.tempData[1] = [];
+    this.tempOptions = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      xAxis: {
+        type: 'value',
+        splitLine: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%']
+      },
+      dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 0,
+            end: 100
+        },
+        {
+            type: 'inside',
+            realtime: true,
+            start: 0,
+            end: 100
+        }
+    ],
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '10%',
+      containLabel: true
+    },
+      series: [{
+        name: 'cputemp',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: []
+      },{
+        name: 'pcbtemp',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: []
+      }]
+    };
+    this.tempSubj.asObservable().subscribe((obj)=>{
+      let {x,y} = obj;
+      if(obj)
+        this.tempDataArray.push({x,y});
+      let idx = 0;
+      let legendall = [];
+      let data = [];
+      this.tempDataArray.map(({x,y})=>{
+        idx++;
+        var legend =  [idx+'_cputemp', idx+'_pcbtemp'];
+        legendall = legendall.concat(legend);
+        data.push({
+          name: idx+'_cputemp',
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
+          data: x
+        });
+        data.push({
+          name: idx+'_pcbtemp',
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
+          data: y
+        });
+      });
+      this.tempUpdateOptions = {
+        legend: {
+          data: legendall,
+          align: 'left'
+        },
+        series: [...data]
+      };
+      this.cdr.detectChanges();
+    });
+
+    // generate some random testing data:
+    // this.gpuData = [];
+
+    // initialize chart options:
+    this.gpuOptions = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      xAxis: {
+        type: 'value',
+        splitLine: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%']
+      },
+      dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 0,
+            end: 100
+        },
+        {
+            type: 'inside',
+            realtime: true,
+            start: 0,
+            end: 100
+        }
+    ],
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '10%',
+      containLabel: true
+    },
+      series: [{
+        name: 'GPU',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: []
+      }]
+    };
+    this.gpuSubj.asObservable().subscribe((x)=>{
+      if(x)
+        this.gpuDataArray.push(x);
+      let idx = 0;
+      var legend = [];
+      let data = this.gpuDataArray.map(d=>{
+        idx++;
+        legend.push(idx+'_GPU');
+        return {
+          name: idx+'_GPU',
+          type: 'line',
+          showSymbol: false,
+          connectNulls:false,
+          hoverAnimation: false,
+          data: d
+        }
+      });
+      this.gpuUpdateOptions = {
+        legend: {
+          data: legend,
+          align: 'left'
+        },
+        series: [...data]
+      };
+      this.cdr.detectChanges();
+    });
   }
 
   openLink(link: string) {
@@ -108,5 +517,126 @@ export class FeaturesComponent implements OnInit {
     if(this.charts.length == 4){
       this.nes.connect(this.charts);
     }
+  }
+
+  cutData(e, tmp) {
+    tmp = tmp.slice(e.dataIndex);
+    console.log(tmp);
+    tmp = tmp.map(d => {
+      const index = parseInt( d.name, 10 ) - e.dataIndex;
+      return {
+        name: index,
+        value: [index, d.value[1]]
+      };
+    });
+    console.log(tmp);
+    return tmp;
+  }
+
+  onChartClick(e){
+    console.log(e)
+    // this.fpsDataArray[e.seriesIndex] = this.fpsDataArray[e.seriesIndex].slice(e.dataIndex);
+    // console.log(this.fpsDataArray[e.seriesIndex]);
+    // this.fpsDataArray[e.seriesIndex] = this.fpsDataArray[e.seriesIndex].map(d => {
+    //   const index = parseInt( d.name, 10 ) - e.dataIndex;
+    //   return {
+    //     name: index,
+    //     value: [index, d.value[1]]
+    //   };
+    // });
+    // console.log(this.fpsDataArray[e.seriesIndex]);
+    this.fpsDataArray[e.seriesIndex] = this.cutData(e, this.fpsDataArray[e.seriesIndex]);
+    this.cpusDataArray[e.seriesIndex].x = this.cutData(e, this.cpusDataArray[e.seriesIndex].x);
+    this.cpusDataArray[e.seriesIndex].y = this.cutData(e, this.cpusDataArray[e.seriesIndex].y);
+    this.cpusDataArray[e.seriesIndex].z = this.cutData(e, this.cpusDataArray[e.seriesIndex].z);
+    this.tempDataArray[e.seriesIndex].x = this.cutData(e, this.tempDataArray[e.seriesIndex].x);
+    this.tempDataArray[e.seriesIndex].y = this.cutData(e, this.tempDataArray[e.seriesIndex].y);
+    this.gpuDataArray[e.seriesIndex] = this.cutData(e, this.gpuDataArray[e.seriesIndex]);
+    this.fpsSubj.next(0);
+    this.cpusSubj.next(0);
+    this.tempSubj.next(0);
+    this.gpuSubj.next(0);
+  }
+
+  show(json:string){
+    let tmp = json.split('_');
+    return tmp[0].substr(0,3)+":"+new Date(parseInt(tmp[1])).toLocaleString();
+  }
+
+  parseJsonToCharts = json=>{
+    if(!json||json.length==0){
+      return;
+    }
+    var tmpfpsData = [];
+    var tmpcpusData = [];
+    tmpcpusData[0] = [];
+    tmpcpusData[1] = [];
+    tmpcpusData[2] = [];
+    var tmptempData = [];
+    tmptempData[0] = [];
+    tmptempData[1] = [];
+    var tmpgpuData = [];
+
+    let startTime = new Date(json[0].time).getTime();
+    json.forEach(z => {
+      let index = ((new Date(z.time).getTime()-startTime)/1000).toFixed(0);
+      tmpfpsData.push({
+        name:index,
+        value:[index,z.fps]
+      });
+
+      tmpcpusData[0].push({
+        name:index,
+        value:[index,z.cpus[0].freq]
+      });
+      tmpcpusData[1].push({
+        name:index,
+        value:[index,z.cpus[1].freq]
+      });
+      if(z.cpus.length>2){
+        tmpcpusData[2].push({
+          name:index,
+          value:[index,z.cpus[2].freq]
+        });
+      }
+
+      tmptempData[0].push({
+        name:index,
+        value:[index,z.cputemp]
+      });
+      tmptempData[1].push({
+        name:index,
+        value:[index,z.pcbtemp]
+      });
+
+      tmpgpuData.push({
+        name:index,
+        value:[index,z.gpufreq]
+      });
+    });
+    this.fpsSubj.next(tmpfpsData);
+    this.cpusSubj.next({x:tmpcpusData[0],y:tmpcpusData[1],z:tmpcpusData[2]});
+    this.tempSubj.next({x:tmptempData[0],y:tmptempData[1]});
+    this.gpuSubj.next(tmpgpuData);
+  }
+  dropped(e){
+    console.log(e);
+    var fr = new FileReader();
+    fr.onloadend = (d)=>{
+      this.parseJsonToCharts(JSON.parse((d.target as any).result));
+    }
+    // loop through files
+    for (var i = 0; i < e.files.length; i++) {
+      // get item
+      e.files[i].fileEntry.file(f=>{
+        fr.readAsText(f);
+      });
+    }
+  }
+  fileOver(e){
+
+  }
+  fileLeave(e){
+
   }
 }

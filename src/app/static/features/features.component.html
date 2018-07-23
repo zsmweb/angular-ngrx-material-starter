@@ -30,7 +30,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts  [options]="fpsOptions" [merge]="fpsUpdateOptions" class="chart-height" (chartClick)="onChartClick($event)" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
             <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
@@ -42,7 +42,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts  [options]="cpusOptions" [merge]="cpusUpdateOptions" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
           
             <mat-expansion-panel expanded="true">
@@ -55,7 +55,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts  [options]="gpuOptions" [merge]="gpuUpdateOptions" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
           
             <mat-expansion-panel expanded="true">
@@ -67,7 +67,7 @@
                   cpu和主板温度显示
                 </mat-panel-description>
               </mat-expansion-panel-header>
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts  [options]="tempOptions" [merge]="tempUpdateOptions" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
 
           </mat-accordion>

@@ -119,7 +119,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts [options]="chartOption" (chartDataZoom)="onChartDataZoom()" [merge]="updateFpsOptions|async" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
             <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
@@ -131,7 +131,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts [options]="chartOption" [merge]="updateCpuOptions|async" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
           
             <mat-expansion-panel expanded="true">
@@ -144,7 +144,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts [options]="chartOption" [merge]="updateGpuOptions|async" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
           
             <mat-expansion-panel expanded="true">
@@ -156,7 +156,7 @@
                   cpu和主板温度显示
                 </mat-panel-description>
               </mat-expansion-panel-header>
-              <div echarts [options]="chartOption" class="chart-height" (chartInit)="onChartInit($event)"></div>
+              <div echarts [options]="chartOption" [merge]="updateTempOptions|async" class="chart-height" (chartInit)="onChartInit($event)"></div>
             </mat-expansion-panel>
 
           </mat-accordion>
@@ -174,3 +174,7 @@
     </div>
   </div>
 </div>
+<span class="app-action" >
+  <button mat-fab color="primary" *ngIf="isZooming" (click)="isZooming=false"><mat-icon>play_arrow</mat-icon></button>
+  <button mat-fab (click)="saveTheData()"><mat-icon>save_alt</mat-icon></button>
+</span>

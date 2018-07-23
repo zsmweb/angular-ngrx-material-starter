@@ -6,7 +6,7 @@ import { stat } from 'fs';
 
 export interface State {
   times: {[device:string]:number[]};
-  entities: { [time: number]: any };
+  entities: { [device:string]: any };
 }
 
 export const INIT_STATE: State = {
