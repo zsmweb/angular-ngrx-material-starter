@@ -40,3 +40,5 @@ export const getChartsState = createSelector(getChartsRootState, (chartsState: C
 
 export const getTimes = createSelector(getChartsState, fromCharts.getTimes);
 export const getJsonEntites = createSelector(getChartsState, fromCharts.getEntities);
+
+export const getAverageFps = createSelector(getChartsState, fromCharts.getAverageFps);

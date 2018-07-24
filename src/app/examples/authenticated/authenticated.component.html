@@ -115,7 +115,7 @@
                   FPS
                 </mat-panel-title>
                 <mat-panel-description>
-                  游戏帧率显示
+                  游戏帧率显示 -平均:{{fpsAverage|async}}- -方差:{{fpsVariance|async}}-
                 </mat-panel-description>
               </mat-expansion-panel-header>
           
@@ -175,6 +175,10 @@
   </div>
 </div>
 <span class="app-action" >
-  <button mat-fab color="primary" *ngIf="isZooming" (click)="isZooming=false"><mat-icon>play_arrow</mat-icon></button>
-  <button mat-fab (click)="saveTheData()"><mat-icon>save_alt</mat-icon></button>
+  <ngc-float-button icon="add">
+      <ngc-float-item-button icon="refresh" content="重新开始" (click)="refresh()"></ngc-float-item-button>
+      <ngc-float-item-button icon="save_alt" (click)="saveTheData()" content="保存当前数据"></ngc-float-item-button>
+  </ngc-float-button>
+  <button mat-fab color="primary" (click)="isZooming=isZooming?false:true"><mat-icon>{{isZooming?"play_arrow":"pause_arrow"}}</mat-icon></button>
 </span>
+

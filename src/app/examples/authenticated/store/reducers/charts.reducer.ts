@@ -1,8 +1,9 @@
 
 
 import * as chartsActions from '../actions/charts.actions';
-import {createSelector} from '@ngrx/store';
-import { stat } from 'fs';
+
+import * as variance from 'compute-variance';
+import * as average from 'average-array';
 
 export interface State {
   times: {[device:string]:number[]};
@@ -56,9 +57,26 @@ export function reducer(state = INIT_STATE, action: chartsActions.All): State {
             entities: newEntities
         }
     }
+    case chartsActions.CLEAR_ALL : {
+        let newEntities = {...state.entities};
+        newEntities[action.payload] = [];
+        return {
+            ...state,
+            entities: newEntities
+        }
+    }
     default: return state;
   }
 }
 
 export const getTimes = (state:State) => state.times;
 export const getEntities = (state:State) => state.entities;
+
+export const getAverageFps = (state:State) =>{
+    let res = {};
+    Object.keys(state.entities).map(key=>{
+        let fpsarr = state.entities[key].map(json=>parseInt(json.fps));
+        res[key] = { average: average(fpsarr).toFixed(2),variance: variance(fpsarr).toFixed(2)};
+    });
+    return res;
+}

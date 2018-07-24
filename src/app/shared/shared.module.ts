@@ -27,6 +27,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 
 import { FileDropModule } from 'ngx-file-drop';
 import { MatNumberSpinnerComponent } from './spinner/mat-number-spinner.component';
+import { NgcFloatButtonModule } from './floatbutton/ngc-float-button.module';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import { MatNumberSpinnerComponent } from './spinner/mat-number-spinner.componen
     MatExpansionModule,
     NgxEchartsModule,
     FileDropModule,
-    MatTableModule
+    MatTableModule,
+    NgcFloatButtonModule
   ],
   declarations: [BigInputComponent, BigInputActionComponent,MatNumberSpinnerComponent],
   exports: [
@@ -79,6 +81,7 @@ import { MatNumberSpinnerComponent } from './spinner/mat-number-spinner.componen
     NgxEchartsModule,
     FileDropModule,
     MatTableModule,
+    NgcFloatButtonModule,
 
     BigInputComponent,
     BigInputActionComponent,

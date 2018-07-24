@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxEchartsService } from 'ngx-echarts';
 import { ditem, Note } from '../../core/models/note';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import {Store} from '@ngrx/store';
 import * as fromNotesStore from './store';
 import * as notesActions from './store/actions/notes.actions';
+import * as chartsActions from './store/actions/charts.actions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take, map, debounceTime, filter } from 'rxjs/operators';
+import { take, map, debounceTime, filter, tap } from 'rxjs/operators';
+import { saveAs } from 'file-saver';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'anms-authenticated',
@@ -15,11 +18,13 @@ import { take, map, debounceTime, filter } from 'rxjs/operators';
 })
 export class AuthenticatedComponent implements OnInit {
   constructor(private router: Router,private nes: NgxEchartsService,private store: Store<fromNotesStore.State>,
-  private routeInfo:ActivatedRoute) {}
+  private routeInfo:ActivatedRoute,private matSnackBar:MatSnackBar) {}
   cpusrs$: Observable<ditem[]>;
   gpusrs$: Observable<ditem[]>;
   curDevice:string;
   allNotes:Note[];
+  fpsAverage:Observable<number>;
+  fpsVariance:Observable<number>;
   ngOnInit() {
     this.curDevice = this.routeInfo.snapshot.params['sn'];
     if(this.curDevice){
@@ -53,6 +58,26 @@ export class AuthenticatedComponent implements OnInit {
     this.setGpuUpdater();
     this.setFpsUpdater();
     this.setTempUpdater();
+
+    this.fpsAverage = this.store.select(fromNotesStore.getAverageFps).pipe(
+      map(x=>{
+        if(this.curDevice in x){
+          return x[this.curDevice].average;
+        }else{
+          return 0;
+        }
+        
+      })
+    );
+    this.fpsVariance = this.store.select(fromNotesStore.getAverageFps).pipe(
+      map(x=>{
+        if(this.curDevice in x){
+          return x[this.curDevice].variance
+        }else{
+          return 0;
+        }
+      })
+    );
   }
   updateCpuOptions:Observable<any> = null;
   updateGpuOptions:Observable<any> = null;
@@ -202,6 +227,10 @@ export class AuthenticatedComponent implements OnInit {
         //console.log(Date.now());
 
         this.globalDataZoom[0].start = 100*(deviceJsons.length-100)/deviceJsons.length;
+        if(deviceJsons.length>=3600){
+          this.saveTheData();
+          this.refresh();
+        }
 
         let seriesData = deviceJsons.map(json=>json.fps);
         let seriestmp = {
@@ -350,5 +379,33 @@ export class AuthenticatedComponent implements OnInit {
   onChartDataZoom(){
     this.isZooming = true;
   }
-  
+
+  saveTheData(){
+    this.store.select(fromNotesStore.getJsonEntites).pipe(
+      take(1),
+      map(jsons=>{
+        let deviceJsons = jsons[this.curDevice];
+        if(!deviceJsons||deviceJsons.length==0){
+          console.error("Device JSON is null");
+          this.matSnackBar.open("文件保存失败！", "ok", {
+            duration: 2000,
+          });
+          return;
+        }
+        var blob = new Blob([JSON.stringify(deviceJsons,null,2)],{type: 'application/json'});
+        saveAs(blob,this.curDevice+"_"+deviceJsons[0].time+".json");
+        this.matSnackBar.open("文件保存成功！", "ok", {
+          duration: 2000,
+        });
+      })
+    ).subscribe();
+  }
+  refresh(){
+    console.log('refresh');
+    this.store.dispatch(new chartsActions.ClearAll(this.curDevice));
+    this.matSnackBar.open("重新开始记录!", "ok", {
+      duration: 2000,
+    });
+
+  }
 }
