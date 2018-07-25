@@ -19,6 +19,16 @@
                   (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
                       
                   </file-drop>
+
+                  <mat-card>
+                    <mat-card-title>
+                      文件列表
+                    </mat-card-title>
+                    <mat-list>
+                      <mat-list-item *ngFor="let fps of fpsShow"> {{show_list(fps)}} </mat-list-item>
+                     </mat-list>
+                  </mat-card>
+
                 </mat-expansion-panel>
             <mat-expansion-panel expanded="true">
               <mat-expansion-panel-header>
@@ -26,7 +36,7 @@
                   FPS
                 </mat-panel-title>
                 <mat-panel-description>
-                  游戏帧率显示
+                  <span>游戏帧率显示</span>
                 </mat-panel-description>
               </mat-expansion-panel-header>
           

@@ -4,7 +4,8 @@ import { environment as env } from '@env/environment';
 import { ROUTE_ANIMATIONS_ELEMENTS } from '@app/core';
 import { NgxEchartsService } from 'ngx-echarts';
 import { Subject } from 'rxjs';
-
+import * as variance from 'compute-variance';
+import * as average from 'average-array';
 @Component({
   selector: 'anms-features',
   templateUrl: './features.component.html',
@@ -44,6 +45,8 @@ export class FeaturesComponent implements OnInit {
   // private gpuData: any[];
   private gpuDataArray: any[] = [];
   gpuSubj = new Subject<any>();
+
+  fpsShow:any[] = [];
 
   ngOnInit() {
     // initialize chart options:
@@ -110,6 +113,12 @@ export class FeaturesComponent implements OnInit {
       let data = this.fpsDataArray.map(d=>{
         idx++;
         legend.push(idx+'_Fps');
+        let fpsarr = d.map((xd)=>{
+          let xx=parseFloat(xd.value[1]);
+          return xx?xx:0;
+        });
+        this.fpsShow[idx-1].average = average(fpsarr).toFixed(2)
+        this.fpsShow[idx-1].variance = variance(fpsarr).toFixed(2);
         return {
           name: idx+'_Fps',
           type: 'line',
@@ -127,6 +136,7 @@ export class FeaturesComponent implements OnInit {
         series: [...data]
       };
       this.cdr.detectChanges();
+      console.log(this.fpsShow);
     });
 
     // this.cpusData = [];
@@ -565,7 +575,7 @@ export class FeaturesComponent implements OnInit {
 
   parseJsonToCharts = json=>{
     if(!json||json.length==0){
-      return;
+      return false;
     }
     var tmpfpsData = [];
     var tmpcpusData = [];
@@ -589,10 +599,12 @@ export class FeaturesComponent implements OnInit {
         name:index,
         value:[index,z.cpus[0].freq]
       });
-      tmpcpusData[1].push({
-        name:index,
-        value:[index,z.cpus[1].freq]
-      });
+      if(z.cpus.length>1){
+        tmpcpusData[1].push({
+          name:index,
+          value:[index,z.cpus[1].freq]
+        });
+      }
       if(z.cpus.length>2){
         tmpcpusData[2].push({
           name:index,
@@ -618,12 +630,30 @@ export class FeaturesComponent implements OnInit {
     this.cpusSubj.next({x:tmpcpusData[0],y:tmpcpusData[1],z:tmpcpusData[2]});
     this.tempSubj.next({x:tmptempData[0],y:tmptempData[1]});
     this.gpuSubj.next(tmpgpuData);
+    return true;
   }
+  droping:string;
   dropped(e){
     console.log(e);
+    if(this.droping){
+      alert("正在忙，请稍候再重新拖入！");
+      return;
+    }
+    this.droping = e.files[0].relativePath;
+    let index = this.fpsShow.length;
+    this.fpsShow.push({id:index+1,desc:this.droping});
+    
     var fr = new FileReader();
     fr.onloadend = (d)=>{
-      this.parseJsonToCharts(JSON.parse((d.target as any).result));
+      let finame = this.droping;
+      this.droping = null;
+      let ret = this.parseJsonToCharts(JSON.parse((d.target as any).result));
+      if(ret){
+        console.log(d)
+        
+      }else{
+        this.fpsShow.pop();
+      }
     }
     // loop through files
     for (var i = 0; i < e.files.length; i++) {
@@ -638,5 +668,12 @@ export class FeaturesComponent implements OnInit {
   }
   fileLeave(e){
 
+  }
+  show_list(fps){
+    let d = fps.desc.substr(0,fps.desc.length-5).split('_');
+    if(d.length<2){
+      return fps.id+" - "+fps.desc + " - 平均:" + fps.average +" - 方差:"+fps.variance;
+    }
+    return fps.id+" - "+d[0]+" - "+new Date(parseInt(d[1])).toLocaleString() + " - 平均:" + fps.average +" - 方差:"+fps.variance;
   }
 }

@@ -75,7 +75,7 @@ export const getEntities = (state:State) => state.entities;
 export const getAverageFps = (state:State) =>{
     let res = {};
     Object.keys(state.entities).map(key=>{
-        let fpsarr = state.entities[key].map(json=>{let d=parseInt(json.fps);return d?d:0});
+        let fpsarr = state.entities[key].map(json=>{let d=parseFloat(json.fps);return d?d:0});
         var average1 =  average(fpsarr), variance1= variance(fpsarr);
         console.log(average1,variance1);
         res[key] = {average:average1?average1.toFixed(2):0,variance:variance1?variance1.toFixed(2):0 };
