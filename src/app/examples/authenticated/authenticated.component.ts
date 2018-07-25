@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take, map, debounceTime, filter, tap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import {MatSnackBar} from '@angular/material';
+import { ROUTE_ANIMATIONS_ELEMENTS } from '../../core';
 
 @Component({
   selector: 'anms-authenticated',
@@ -25,6 +26,7 @@ export class AuthenticatedComponent implements OnInit {
   allNotes:Note[];
   fpsAverage:Observable<number>;
   fpsVariance:Observable<number>;
+  routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   ngOnInit() {
     this.curDevice = this.routeInfo.snapshot.params['sn'];
     if(this.curDevice){
@@ -227,7 +229,7 @@ export class AuthenticatedComponent implements OnInit {
         //console.log(Date.now());
 
         this.globalDataZoom[0].start = 100*(deviceJsons.length-100)/deviceJsons.length;
-        if(deviceJsons.length>=3600){
+        if(deviceJsons.length>=2400){
           this.saveTheData();
           this.refresh();
         }
