@@ -15,7 +15,7 @@ export class FeaturesComponent implements OnInit {
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   versions = env.versions;
 
-  constructor(private cdr: ChangeDetectorRef,private nes: NgxEchartsService){}
+  constructor(private nes: NgxEchartsService){}
 
   @ViewChild("container") container:ElementRef;
 
@@ -117,8 +117,14 @@ export class FeaturesComponent implements OnInit {
           let xx=parseFloat(xd.value[1]);
           return xx?xx:0;
         });
-        this.fpsShow[idx-1].average = average(fpsarr).toFixed(2)
-        this.fpsShow[idx-1].variance = variance(fpsarr).toFixed(2);
+        let a = average(fpsarr).toFixed(2);
+        let v = variance(fpsarr).toFixed(2);
+        if(this.fpsShow[idx-1]){
+          this.fpsShow[idx-1].average = a;
+          this.fpsShow[idx-1].variance = v;
+        }else{
+          this.fpsShow.push({id:idx,average:a,variance:v});
+        }
         return {
           name: idx+'_Fps',
           type: 'line',
@@ -135,7 +141,7 @@ export class FeaturesComponent implements OnInit {
         },
         series: [...data]
       };
-      this.cdr.detectChanges();
+      
       console.log(this.fpsShow);
     });
 
@@ -253,7 +259,7 @@ export class FeaturesComponent implements OnInit {
         },
         series: [...data]
       };
-      this.cdr.detectChanges();
+      
     });
 
     // this.tempData = [];
@@ -351,7 +357,7 @@ export class FeaturesComponent implements OnInit {
         },
         series: [...data]
       };
-      this.cdr.detectChanges();
+      
     });
 
     // generate some random testing data:
@@ -435,7 +441,7 @@ export class FeaturesComponent implements OnInit {
         },
         series: [...data]
       };
-      this.cdr.detectChanges();
+      
     });
   }
 
@@ -639,30 +645,20 @@ export class FeaturesComponent implements OnInit {
   droping:string;
   dropped(e){
     console.log(e);
-    if(this.droping){
-      alert("正在忙，请稍候再重新拖入！");
-      return;
-    }
-    this.droping = e.files[0].relativePath;
-    let index = this.fpsShow.length;
-    this.fpsShow.push({id:index+1,desc:this.droping});
-    
-    var fr = new FileReader();
-    fr.onloadend = (d)=>{
-      let finame = this.droping;
-      this.droping = null;
-      let ret = this.parseJsonToCharts(JSON.parse((d.target as any).result));
-      if(ret){
-        console.log(d)
-        
-      }else{
-        this.fpsShow.pop();
-      }
-    }
     // loop through files
     for (var i = 0; i < e.files.length; i++) {
       // get item
       e.files[i].fileEntry.file(f=>{
+        console.log(f);
+        var fr = new FileReader();
+        fr.onloadend = (d)=>{
+          this.fpsShow.push({desc:f.name,id:this.fpsShow.length+1});
+          let ret = this.parseJsonToCharts(JSON.parse((d.target as any).result));
+          if(ret){
+            
+          }else{
+          }
+        }
         fr.readAsText(f);
       });
     }
