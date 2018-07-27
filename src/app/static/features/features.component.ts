@@ -530,6 +530,10 @@ export class FeaturesComponent implements OnInit {
   }
 
   cutData(e, tmp) {
+    if(e.event.event.altKey){
+      tmp=tmp.slice(0,e.dataIndex);
+      return tmp;
+    }
     tmp = tmp.slice(e.dataIndex);
     console.log(tmp);
     tmp = tmp.map(d => {
