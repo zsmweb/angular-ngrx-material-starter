@@ -17,6 +17,7 @@ export class NotesService {
 
   constructor(private socket: SocketService) {
     this.socket.join('notes');
+    this.socket.emit('reverseDevice',"ok");
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
     this.notesListed$ = this.socket.listen('[Notes] Listed');
     this.noteAdded$ = this.socket.listen('[Notes] Added');

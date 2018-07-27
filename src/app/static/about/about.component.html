@@ -20,26 +20,22 @@
       </div>
       <div class="get-started" [ngClass]="routeAnimationsElements">
         <h2>Getting started</h2>
-        <code>git clone
-          https://github.com/tomastrajan/angular-ngrx-material-starter.git
-          new-project</code><br>
-        <code>cd new-project</code><br>
-        <code>npm install</code><br>
-        <code>npm start</code>
+        <code>在浏览器中输入地址 http://127.0.0.1:3000 可以打开多个窗口，方便查看</code>
+        <h3>实时监控</h3>
+        <code>root手机，联网并且在手机端装上app，点击USBSTART</code><br>
+        <code>运行adb reverse tcp:3000 tcp:3000</code><br>
+        <code>点击悬浮窗+号，弹出按钮中的保存当前数据可以导出json文件</code><br>
+        <code>点击悬浮窗+号，弹出按钮中的重新开始，可以清除数据重新记录</code>
+        <h3>历史对比</h3>
+        <code>把实时监控导出的json文件拖入提示的框框中</code><br>
+        <code>在fps图中可以点击截取去掉点击的位置前面的所有数据</code><br>
+        <code>按住ALT键，在fps图中可以点击截取去掉点击的位置后面的所有数据</code><br>
+
+        <h3>其他一些功能</h3>
+        <code>在服务端软件界面（即‘Electron-With-Express’） 按F1按键可以调出或者隐藏服务器log页面，隐藏会清掉所有log</code><br>
+        <code>按F2可以调出页面的开发者模式</code><br>
       </div>
     </div>
   </div>
 </div>
-<div class="container">
-  <div class="follow-releases" [ngClass]="routeAnimationsElements">
-    <h2>Get notified about new releases</h2>
-    <p>
-      Follow <a href="https://www.twitter.com/releasebutler" target="_blank">Release
-      Butler</a>
-      a Twitter bot that helps you to stay up to date with releases of popular frontend
-      frameworks & libraries!
-    </p>
 
-    <img [src]="releaseButler" alt="Release Butler tweet example">
-  </div>
-</div>

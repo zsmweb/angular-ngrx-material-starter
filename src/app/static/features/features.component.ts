@@ -68,7 +68,7 @@ export class FeaturesComponent implements OnInit {
       },
       yAxis: {
         type: 'value',
-        boundaryGap: [0, '100%']
+        boundaryGap: ['0%', '10%']
       },
       dataZoom: [
         {
@@ -161,7 +161,7 @@ export class FeaturesComponent implements OnInit {
       },
       yAxis: {
         type: 'value',
-        boundaryGap: [0, '100%']
+        boundaryGap: ['0%', '10%']
       },
       dataZoom: [
         {
@@ -277,7 +277,7 @@ export class FeaturesComponent implements OnInit {
       },
       yAxis: {
         type: 'value',
-        boundaryGap: [0, '100%']
+        boundaryGap: ['0%', '10%']
       },
       dataZoom: [
         {
@@ -376,7 +376,7 @@ export class FeaturesComponent implements OnInit {
       },
       yAxis: {
         type: 'value',
-        boundaryGap: [0, '100%']
+        boundaryGap: ['0%', '10%']
       },
       dataZoom: [
         {
