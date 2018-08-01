@@ -2,7 +2,8 @@
   <div class="row align-items-end">
     <div class="col-md-12 col-lg-12" [ngClass]="routeAnimationsElements">
       <mat-card>
-        <mat-card-title>实时游戏监控</mat-card-title>
+        <mat-card-title><code><mat-checkbox (change)="toggleHideZero()" [(ngModel)]="filterZero">HideZero</mat-checkbox></code>实时游戏监控</mat-card-title>
+        
         <mat-card-content>
           <mat-accordion class="headers-align" multi="true">
             <mat-expansion-panel expanded="true">

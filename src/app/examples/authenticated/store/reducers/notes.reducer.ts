@@ -128,9 +128,9 @@ export const getSelected = createSelector(
 export const getEntitesArray = (state: State) => state.ids.map(id => state.entities[id]);
 export const getCpuEntitesArray = (state: State) => state.ids.filter(id=>state.entities[id]['path']=='/sys/srs/srs_cpulevel').map(id => {
   let bd = state.entities[id].body;
-  return {id:bd[0],min:bd[1],max:bd[2],timeout:bd[3]};
+  return {id:bd[0],min:bd[1],max:bd[2],timeout:bd[3],path:"/sys/srs/srs_cpulevel"};
 });
 export const getGpuEntitesArray = (state: State) => state.ids.filter(id=>state.entities[id]['path']=='/sys/srs/srs_gpulevel').map(id => {
   let bd = state.entities[id].body;
-  return {id:bd[0],min:bd[1],max:bd[2],timeout:bd[3]};
+  return {id:bd[0],min:bd[1],max:bd[2],timeout:bd[3],path:"/sys/srs/srs_gpulevel"};
 });

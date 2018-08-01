@@ -26,6 +26,7 @@ export class AuthenticatedComponent implements OnInit {
   allNotes:Note[];
   fpsAverage:Observable<number>;
   fpsVariance:Observable<number>;
+  filterZero = true;
   routeAnimationsElements = ROUTE_ANIMATIONS_ELEMENTS;
   ngOnInit() {
     this.curDevice = this.routeInfo.snapshot.params['sn'];
@@ -45,11 +46,11 @@ export class AuthenticatedComponent implements OnInit {
     }
     this.cpusrs$ = this.store.select(fromNotesStore.getCpuEntitesArray).pipe(
       debounceTime(500),
-      map(x=>x)
+      map(x=>x.filter(y=>y.timeout||!this.filterZero))
     );
     this.gpusrs$ = this.store.select(fromNotesStore.getGpuEntitesArray).pipe(
       debounceTime(500),
-      map(x=>x)
+      map(x=>x.filter(y=>y.timeout||!this.filterZero))
     );
     this.store.select(fromNotesStore.getEntitiesArray).subscribe(notes=>{
       this.allNotes = notes;
@@ -96,7 +97,8 @@ export class AuthenticatedComponent implements OnInit {
 
   onValueChange(element,event){
     let updatenote = this.allNotes.find((note)=>{
-      if(note.body[0] == element.id)
+      console.error(note,element)
+      if(note.body[0] == element.id&&note["path"] == element.path)
         return true;
     })
     updatenote = Object.assign({},updatenote);
@@ -409,5 +411,8 @@ export class AuthenticatedComponent implements OnInit {
       duration: 2000,
     });
 
+  }
+  toggleHideZero(){
+    this.store.dispatch(new notesActions.ListNotes());
   }
 }
